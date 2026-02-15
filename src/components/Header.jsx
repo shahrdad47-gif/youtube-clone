@@ -1,13 +1,61 @@
 import { useState, useRef, useEffect } from 'react';
 
-function Header() {
+const notifications = [
+  {
+    id: 1,
+    avatar: 'https://i.pravatar.cc/80?img=12',
+    channel: 'MrBeast',
+    message: 'uploaded: I Survived 100 Days in the Wilderness',
+    time: '2 hours ago',
+    thumbnail: 'https://picsum.photos/seed/notif1/160/90',
+  },
+  {
+    id: 2,
+    avatar: 'https://i.pravatar.cc/80?img=33',
+    channel: 'TechVault',
+    message: 'liked your comment: "Great video!"',
+    time: '5 hours ago',
+    thumbnail: 'https://picsum.photos/seed/notif2/160/90',
+  },
+  {
+    id: 3,
+    avatar: 'https://i.pravatar.cc/80?img=47',
+    channel: 'GamersUnite',
+    message: 'is live: Late Night Gaming Stream',
+    time: '8 hours ago',
+    thumbnail: 'https://picsum.photos/seed/notif3/160/90',
+  },
+  {
+    id: 4,
+    avatar: 'https://i.pravatar.cc/80?img=58',
+    channel: 'CookingPro',
+    message: 'uploaded: 5-Minute Pasta You Need to Try',
+    time: '1 day ago',
+    thumbnail: 'https://picsum.photos/seed/notif4/160/90',
+  },
+  {
+    id: 5,
+    avatar: 'https://i.pravatar.cc/80?img=65',
+    channel: 'ScienceNow',
+    message: 'replied to your comment on: Black Holes Explained',
+    time: '2 days ago',
+    thumbnail: 'https://picsum.photos/seed/notif5/160/90',
+  },
+];
+
+function Header({ onToggleSidebar }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const menuRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotifOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -17,7 +65,12 @@ function Header() {
   return (
     <div className="header">
       <div className="left-section">
-        <img className="hamburger-menu" src="/icons/hamburger-menu.svg" alt="" />
+        <img
+          className="hamburger-menu"
+          src="/icons/hamburger-menu.svg"
+          alt=""
+          onClick={onToggleSidebar}
+        />
         <img className="youtube-menu" src="/icons/youtube-logo.svg" alt="" />
       </div>
 
@@ -39,7 +92,36 @@ function Header() {
           <div className="tooltip">Create</div>
         </div>
         <img className="app-icon" src="/icons/youtube-apps.svg" alt="" />
-        <img className="notfication-icon" src="/icons/notifications.svg" alt="" />
+
+        {/* Notification bell + dropdown */}
+        <div className="notif-container" ref={notifRef}>
+          <div className="notif-bell" onClick={() => setNotifOpen(!notifOpen)}>
+            <img className="notfication-icon" src="/icons/notifications.svg" alt="" />
+            <span className="notif-badge">5</span>
+          </div>
+          {notifOpen && (
+            <div className="notif-dropdown">
+              <div className="notif-header">
+                <span>Notifications</span>
+                <svg viewBox="0 0 24 24" width="20" height="20" style={{ cursor: 'pointer' }}>
+                  <path fill="#aaa" d="M13.22 3l.55 2.2.13.51.5.18c.61.23 1.19.56 1.72.98l.4.32.5-.14 2.17-.62 1.22 2.11-1.63 1.59-.37.36.08.51c.05.32.08.64.08.98s-.03.66-.08.98l-.08.51.37.36 1.63 1.59-1.22 2.11-2.17-.62-.5-.14-.4.32c-.53.43-1.11.76-1.72.98l-.5.18-.13.51-.55 2.24h-2.44l-.55-2.22-.13-.51-.5-.18c-.6-.23-1.18-.56-1.72-.99l-.4-.32-.5.14-2.17.62-1.21-2.12 1.63-1.59.37-.36-.08-.51c-.05-.32-.08-.65-.08-.98s.03-.66.08-.98l.08-.51-.37-.36L3.66 8.09l1.22-2.11 2.17.62.5.14.4-.32c.53-.44 1.11-.77 1.72-.99l.5-.18.13-.51.54-2.21h2.44M14 2h-4l-.72 2.91c-.73.28-1.42.66-2.05 1.13L4.42 5.2 2.42 8.8l2.12 2.07c-.07.42-.1.85-.1 1.13 0 .28.03.71.1 1.13L2.42 15.2l2 3.6 2.82-.84c.63.48 1.31.86 2.05 1.13L10 22h4l.72-2.91c.73-.27 1.42-.65 2.05-1.13l2.81.84 2-3.6-2.12-2.07c.07-.42.1-.85.1-1.13 0-.28-.03-.71-.1-1.13l2.12-2.07-2-3.6-2.82.84c-.63-.48-1.31-.86-2.05-1.13L14 2z" />
+                </svg>
+              </div>
+              {notifications.map(n => (
+                <div className="notif-item" key={n.id}>
+                  <img className="notif-avatar" src={n.avatar} alt="" />
+                  <div className="notif-text">
+                    <p className="notif-message"><strong>{n.channel}</strong> {n.message}</p>
+                    <p className="notif-time">{n.time}</p>
+                  </div>
+                  <img className="notif-thumb" src={n.thumbnail} alt="" />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Profile dropdown */}
         <div className="profile-menu-container" ref={menuRef}>
           <img
             className="profile-image"
