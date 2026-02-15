@@ -53,15 +53,6 @@ const videos = [
     author: "mczleev \u2713",
     stats: "7 months ago \u00b7 45k views",
   },
-  {
-    id: 7,
-    thumbnail: "/images/thumbnails/corgi.jpg",
-    duration: "10:30",
-    profilePic: "/images/profiles/channels4_profile.jpg",
-    title: "The Ultimate Corgi Compilation - Cutest Moments Ever!",
-    author: "Corgi Planet \u2713",
-    stats: "3 months ago \u00b7 1.5M views",
-  },
 ];
 
 export default videos;
