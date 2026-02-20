@@ -68,7 +68,7 @@ body {
 
 .Searchbar {
   flex: 1;
-  width: 0;
+  width: 100%;
   padding: 10px 15px;
   border: 1px solid #303030;
   border-radius: 20px 0 0 20px;
@@ -1547,6 +1547,351 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
+}
+
+/* ========== Search Input Wrapper ========== */
+
+.search-input-wrapper {
+  flex: 1;
+  width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper .Searchbar {
+  width: 100%;
+  padding-right: 36px;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+}
+
+.search-clear-btn:hover {
+  background-color: #3a3a3a;
+}
+
+/* ========== Search Dropdown ========== */
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: #222;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  z-index: 350;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+.search-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  color: #f1f1f1;
+}
+
+.search-dropdown-item:hover {
+  background-color: #333;
+}
+
+.search-dropdown-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-dropdown-channel {
+  font-weight: 500;
+}
+
+.search-dropdown-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* ========== Sign-In Button ========== */
+
+.sign-in-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #3ea6ff;
+  border-radius: 20px;
+  padding: 5px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sign-in-btn:hover {
+  background-color: rgba(62, 166, 255, 0.1);
+}
+
+.sign-in-btn span {
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3ea6ff;
+}
+
+/* ========== Search Results ========== */
+
+.search-results {
+  padding: 0;
+}
+
+.search-no-results {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.search-no-results p {
+  font-family: Roboto, Arial;
+  font-size: 16px;
+  color: #aaa;
+  margin: 8px 0;
+}
+
+.search-no-results p:first-child {
+  font-size: 20px;
+  color: #f1f1f1;
+}
+
+.search-section {
+  margin-bottom: 32px;
+}
+
+.search-section-title {
+  font-family: Roboto, Arial;
+  font-size: 20px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin: 0 0 16px;
+}
+
+.search-channels-row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.search-channel-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #272727;
+  border-radius: 12px;
+  padding: 16px 24px;
+  min-width: 300px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.search-channel-card:hover {
+  background-color: #3a3a3a;
+}
+
+.search-channel-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.search-channel-info {
+  min-width: 0;
+}
+
+.search-channel-name {
+  font-family: Roboto, Arial;
+  font-size: 16px;
+  font-weight: 500;
+  color: #f1f1f1;
+  margin: 0;
+}
+
+.search-channel-handle {
+  font-family: Roboto, Arial;
+  font-size: 13px;
+  color: #aaa;
+  margin: 2px 0 0;
+}
+
+.search-channel-subs {
+  font-family: Roboto, Arial;
+  font-size: 12px;
+  color: #aaa;
+  margin: 2px 0 0;
+}
+
+.search-shorts-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+/* ========== Channel Page ========== */
+
+.channel-page {
+  padding: 0;
+}
+
+.channel-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(40, 40, 40, 0.8);
+  border: none;
+  color: #f1f1f1;
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.channel-back-btn:hover {
+  background: rgba(60, 60, 60, 0.9);
+}
+
+.channel-banner {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.channel-banner img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.channel-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.channel-header-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.channel-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.channel-header-name {
+  font-family: Roboto, Arial;
+  font-size: 24px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin: 0;
+}
+
+.channel-header-meta {
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  color: #aaa;
+  margin: 4px 0 0;
+}
+
+.channel-header-desc {
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  color: #aaa;
+  margin: 8px 0 0;
+  line-height: 20px;
+}
+
+.channel-subscribe-btn {
+  background-color: #f1f1f1;
+  color: #0f0f0f;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.channel-subscribe-btn:hover {
+  background-color: #d9d9d9;
+}
+
+.channel-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #3f3f3f;
+  margin-bottom: 24px;
+}
+
+.channel-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #aaa;
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+.channel-tab:hover {
+  color: #f1f1f1;
+}
+
+.channel-tab.active {
+  color: #f1f1f1;
+  border-bottom-color: #f1f1f1;
+}
+
+.channel-content {
+  padding: 0;
+}
+
+.channel-empty {
+  font-family: Roboto, Arial;
+  font-size: 16px;
+  color: #aaa;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.channel-shorts-section {
+  margin-top: 32px;
 }
 
 /* ========== Responsive ========== */

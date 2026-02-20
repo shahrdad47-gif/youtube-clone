@@ -10,8 +10,11 @@ import YouPage from './components/YouPage'
 import UploadModal from './components/UploadModal'
 import VideoPlayer from './components/VideoPlayer'
 import ShortsPlayer from './components/ShortsPlayer'
+import SearchResults from './components/SearchResults'
+import ChannelPage from './components/ChannelPage'
 import staticVideos from './data/videos'
 import staticShorts from './data/shorts'
+import channels from './data/channels'
 
 function App() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
@@ -21,6 +24,9 @@ function App() {
   const [showUpload, setShowUpload] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(null);
   const [currentShort, setCurrentShort] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentChannel, setCurrentChannel] = useState(null);
+  const [user, setUser] = useState(null);
 
   const fetchVideos = useCallback(() => {
     fetch('/api/videos?shorts=false')
@@ -77,12 +83,46 @@ function App() {
     fetchVideos();
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setActivePage("search");
+    setCurrentChannel(null);
+    setCurrentVideo(null);
+  };
+
+  const handleLogoClick = () => {
+    setActivePage("home");
+    setSearchQuery('');
+    setCurrentChannel(null);
+    setCurrentVideo(null);
+  };
+
+  const handleNavigate = (page) => {
+    setActivePage(page);
+    setSearchQuery('');
+    setCurrentChannel(null);
+    setCurrentVideo(null);
+  };
+
+  const handleChannelClick = (channel) => {
+    setCurrentChannel(channel);
+    setSearchQuery('');
+    setActivePage("channel");
+  };
+
   if (currentVideo) {
     return (
       <>
         <Header
           onToggleSidebar={() => setSidebarExpanded(prev => !prev)}
           onUploadClick={() => setShowUpload(true)}
+          onSearch={handleSearch}
+          onLogoClick={handleLogoClick}
+          onChannelClick={handleChannelClick}
+          videos={videos}
+          channels={channels}
+          user={user}
+          onSignIn={setUser}
         />
         <VideoPlayer video={currentVideo} onBack={() => setCurrentVideo(null)} />
       </>
@@ -94,12 +134,14 @@ function App() {
       <Header
         onToggleSidebar={() => setSidebarExpanded(prev => !prev)}
         onUploadClick={() => setShowUpload(true)}
+        onSearch={handleSearch}
+        onLogoClick={handleLogoClick}
       />
       <Sidebar
         expanded={sidebarExpanded}
         onClose={() => setSidebarExpanded(false)}
         activePage={activePage}
-        onNavigate={setActivePage}
+        onNavigate={handleNavigate}
       />
       {activePage === "home" && (
         <>
@@ -110,6 +152,29 @@ function App() {
       {activePage === "shorts" && <ShortsPage onShortClick={handleShortClick} />}
       {activePage === "subscriptions" && <SubscriptionsPage />}
       {activePage === "you" && <YouPage />}
+
+      {activePage === "search" && (
+        <SearchResults
+          query={searchQuery}
+          videos={videos}
+          shorts={shorts}
+          channels={channels}
+          onVideoClick={handleVideoClick}
+          onChannelClick={handleChannelClick}
+          onShortClick={handleShortClick}
+        />
+      )}
+
+      {activePage === "channel" && currentChannel && (
+        <ChannelPage
+          channel={currentChannel}
+          videos={videos}
+          shorts={shorts}
+          onBack={handleLogoClick}
+          onVideoClick={handleVideoClick}
+          onShortClick={handleShortClick}
+        />
+      )}
 
       {showUpload && (
         <UploadModal

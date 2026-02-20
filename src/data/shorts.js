@@ -69,6 +69,27 @@ const shorts = [
     views: "27M views",
     videoUrl: "/uploads/videos/what_car_can_you_get.mp4",
   },
+  {
+    id: 11,
+    thumbnail: "https://picsum.photos/seed/corgishort1/405/720",
+    title: "Corgi tries to catch its own tail 😂",
+    views: "52M views",
+    videoUrl: "/uploads/videos/for_bigger_blazes.mp4",
+  },
+  {
+    id: 12,
+    thumbnail: "https://picsum.photos/seed/corgishort2/405/720",
+    title: "Corgi sploot on the kitchen floor",
+    views: "38M views",
+    videoUrl: "/uploads/videos/for_bigger_fun.mp4",
+  },
+  {
+    id: 13,
+    thumbnail: "https://picsum.photos/seed/corgishort3/405/720",
+    title: "When you tell a corgi it's walk time",
+    views: "71M views",
+    videoUrl: "/uploads/videos/for_bigger_joyrides.mp4",
+  },
 ];
 
 export default shorts;

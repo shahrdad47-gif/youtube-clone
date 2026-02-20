@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 const notifications = [
   {
@@ -43,11 +43,105 @@ const notifications = [
   },
 ];
 
-function Header({ onToggleSidebar, onUploadClick }) {
+// Placeholder Google Client ID — replace with your real one
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChannelClick, videos = [], channels = [], user, onSignIn }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
   const menuRef = useRef(null);
   const notifRef = useRef(null);
+  const searchRef = useRef(null);
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim() && onSearch) {
+      onSearch(searchQuery.trim());
+      setDropdownOpen(false);
+    }
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+    if (e.key === 'Escape') {
+      setDropdownOpen(false);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setDropdownOpen(false);
+  };
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    setDropdownOpen(val.trim().length > 0);
+  };
+
+  // Compute dropdown suggestions
+  const query = searchQuery.trim().toLowerCase();
+  const matchingChannels = query.length > 0
+    ? channels.filter(c =>
+        c.name.toLowerCase().includes(query) ||
+        c.handle.toLowerCase().includes(query)
+      ).slice(0, 2)
+    : [];
+  const matchingVideos = query.length > 0
+    ? videos.filter(v =>
+        v.title.toLowerCase().includes(query)
+      ).slice(0, 5 - matchingChannels.length)
+    : [];
+
+  // Google Sign-In
+  const initGoogleSignIn = useCallback(() => {
+    if (!window.google?.accounts?.id) return;
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: (response) => {
+        // Decode JWT payload
+        try {
+          const payload = JSON.parse(atob(response.credential.split('.')[1]));
+          onSignIn?.({
+            name: payload.name,
+            email: payload.email,
+            avatar: payload.picture,
+          });
+        } catch {
+          // silently fail
+        }
+      },
+    });
+  }, [onSignIn]);
+
+  useEffect(() => {
+    // Load Google Identity Services script
+    if (document.querySelector('script[src*="accounts.google.com/gsi/client"]')) {
+      initGoogleSignIn();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = initGoogleSignIn;
+    document.head.appendChild(script);
+  }, [initGoogleSignIn]);
+
+  const handleProfileClick = () => {
+    if (!user) {
+      // Trigger Google One Tap / prompt
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.prompt();
+      }
+    } else {
+      setMenuOpen(!menuOpen);
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -56,6 +150,9 @@ function Header({ onToggleSidebar, onUploadClick }) {
       }
       if (notifRef.current && !notifRef.current.contains(e.target)) {
         setNotifOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setDropdownOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -71,12 +168,74 @@ function Header({ onToggleSidebar, onUploadClick }) {
           alt=""
           onClick={onToggleSidebar}
         />
-        <img className="youtube-menu" src="/icons/youtube-logo.svg" alt="" />
+        <img
+          className="youtube-menu"
+          src="/icons/youtube-logo.svg"
+          alt=""
+          style={{ cursor: 'pointer' }}
+          onClick={onLogoClick}
+        />
       </div>
 
-      <div className="middle-section">
-        <input className="Searchbar" type="text" placeholder="Search" />
-        <button className="search-button">
+      <div className="middle-section" ref={searchRef}>
+        <div className="search-input-wrapper">
+          <input
+            className="Searchbar"
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onKeyDown={handleSearchKeyDown}
+            onFocus={() => { if (searchQuery.trim()) setDropdownOpen(true); setSearchFocused(true); }}
+            onBlur={() => setSearchFocused(false)}
+          />
+          {searchQuery && (
+            <button className="search-clear-btn" onClick={handleClearSearch}>
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#aaa" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+          )}
+
+          {/* Search Dropdown */}
+          {dropdownOpen && (matchingChannels.length > 0 || matchingVideos.length > 0) && (
+            <div className="search-dropdown">
+              {matchingChannels.map(channel => (
+                <div
+                  key={channel.id}
+                  className="search-dropdown-item search-dropdown-channel"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    onChannelClick?.(channel);
+                    setDropdownOpen(false);
+                    setSearchQuery('');
+                  }}
+                >
+                  <img className="search-dropdown-avatar" src={channel.avatar} alt="" />
+                  <span>{channel.handle}</span>
+                </div>
+              ))}
+              {matchingVideos.map(video => (
+                <div
+                  key={video.id}
+                  className="search-dropdown-item"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    onSearch?.(video.title);
+                    setDropdownOpen(false);
+                    setSearchQuery(video.title);
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" style={{ flexShrink: 0 }}>
+                    <path fill="#aaa" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                  </svg>
+                  <span>{video.title}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <button className="search-button" onClick={handleSearchSubmit}>
           <img className="search-icon" src="/icons/search.svg" alt="" />
           <div className="tooltip">Search</div>
         </button>
@@ -123,23 +282,32 @@ function Header({ onToggleSidebar, onUploadClick }) {
 
         {/* Profile dropdown */}
         <div className="profile-menu-container" ref={menuRef}>
-          <img
-            className="profile-image"
-            src="/images/profiles/channels4_profile (1).jpg"
-            alt=""
-            onClick={() => setMenuOpen(!menuOpen)}
-          />
-          {menuOpen && (
+          {user ? (
+            <img
+              className="profile-image"
+              src={user.avatar}
+              alt=""
+              onClick={handleProfileClick}
+            />
+          ) : (
+            <div className="sign-in-btn" onClick={handleProfileClick}>
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="#3ea6ff" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 2.13-.74 4.08-1.97 5.63-1.15-1.36-3.14-2.3-5.53-2.66a4 4 0 1 0-3 0c-2.39.36-4.38 1.3-5.53 2.66A8.96 8.96 0 0 1 3 12c0-4.96 4.04-9 9-9zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
+              </svg>
+              <span>Sign in</span>
+            </div>
+          )}
+          {menuOpen && user && (
             <div className="profile-dropdown">
               <div className="profile-dropdown-header">
                 <img
                   className="profile-dropdown-avatar"
-                  src="/images/profiles/channels4_profile (1).jpg"
+                  src={user.avatar}
                   alt=""
                 />
                 <div className="profile-dropdown-info">
-                  <p className="profile-dropdown-name">Creator</p>
-                  <p className="profile-dropdown-handle">@creator</p>
+                  <p className="profile-dropdown-name">{user.name}</p>
+                  <p className="profile-dropdown-handle">{user.email}</p>
                   <a className="profile-dropdown-channel" href="#">View your channel</a>
                 </div>
               </div>
@@ -153,7 +321,7 @@ function Header({ onToggleSidebar, onUploadClick }) {
                 <svg viewBox="0 0 24 24" width="24" height="24"><path fill="#fff" d="M4 20h14v2H4c-1.1 0-2-.9-2-2V6h2v14zM18 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h10v12zm-5-7V5l4 3.5-4 3.5z"/></svg>
                 <span>Switch account</span>
               </div>
-              <div className="profile-dropdown-item">
+              <div className="profile-dropdown-item" onClick={() => { onSignIn?.(null); setMenuOpen(false); }}>
                 <svg viewBox="0 0 24 24" width="24" height="24"><path fill="#fff" d="M20 3v18H8v-1h11V4H8V3h12zm-8.9 12.1.7.7 4.4-4.4L11.8 7l-.7.7 3.1 3.1H3v1h11.3l-3.2 3.3z"/></svg>
                 <span>Sign out</span>
               </div>
