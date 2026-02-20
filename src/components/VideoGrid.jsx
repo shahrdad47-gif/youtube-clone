@@ -12,6 +12,7 @@ function VideoGrid({ videos, onVideoClick }) {
           title={video.title}
           author={video.author}
           stats={video.stats}
+          videoUrl={video.videoUrl}
           onClick={() => onVideoClick && onVideoClick(video)}
         />
       ))}

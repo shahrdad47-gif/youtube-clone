@@ -1,8 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
-function ShortsShelf({ shorts }) {
-  const [playingId, setPlayingId] = useState(null);
-
+function ShortsShelf({ shorts, onShortClick }) {
   return (
     <div className="shorts-shelf">
       <div className="shorts-header">
@@ -21,38 +19,59 @@ function ShortsShelf({ shorts }) {
         <h2>Shorts</h2>
       </div>
       <div className="shorts-row">
-        {shorts.map((short) => (
-          <div
-            className="short-card"
+        {shorts.map((short, index) => (
+          <ShortCard
             key={short.id}
-            onClick={() => setPlayingId(playingId === short.id ? null : short.id)}
-          >
-            <div className="short-thumbnail-container">
-              {playingId === short.id && short.videoUrl ? (
-                <video
-                  className="short-thumbnail"
-                  src={short.videoUrl}
-                  autoPlay
-                  loop
-                  controls
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : (
-                <img
-                  className="short-thumbnail"
-                  src={short.thumbnail}
-                  alt={short.title}
-                />
-              )}
-              {playingId !== short.id && (
-                <div className="short-title-overlay">
-                  <p className="short-title">{short.title}</p>
-                  <p className="short-views">{short.views}</p>
-                </div>
-              )}
-            </div>
-          </div>
+            short={short}
+            onClick={() => onShortClick(index)}
+          />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function ShortCard({ short, onClick }) {
+  const [hovered, setHovered] = useState(false);
+  const hoverTimer = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (short.videoUrl) {
+      hoverTimer.current = setTimeout(() => setHovered(true), 500);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(hoverTimer.current);
+    setHovered(false);
+  };
+
+  return (
+    <div className="short-card" onClick={onClick}>
+      <div
+        className="short-thumbnail-container"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {hovered && short.videoUrl ? (
+          <video
+            className="short-thumbnail hover-preview-video"
+            src={short.videoUrl}
+            muted
+            autoPlay
+            loop
+          />
+        ) : (
+          <img
+            className="short-thumbnail"
+            src={short.thumbnail}
+            alt={short.title}
+          />
+        )}
+        <div className="short-title-overlay">
+          <p className="short-title">{short.title}</p>
+          <p className="short-views">{short.views}</p>
+        </div>
       </div>
     </div>
   );

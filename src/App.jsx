@@ -9,6 +9,7 @@ import SubscriptionsPage from './components/SubscriptionsPage'
 import YouPage from './components/YouPage'
 import UploadModal from './components/UploadModal'
 import VideoPlayer from './components/VideoPlayer'
+import ShortsPlayer from './components/ShortsPlayer'
 import staticVideos from './data/videos'
 import staticShorts from './data/shorts'
 
@@ -19,6 +20,7 @@ function App() {
   const [shorts, setShorts] = useState(staticShorts);
   const [showUpload, setShowUpload] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(null);
+  const [currentShort, setCurrentShort] = useState(null);
 
   const fetchVideos = useCallback(() => {
     fetch('/api/videos?shorts=false')
@@ -66,6 +68,10 @@ function App() {
     setCurrentVideo(video);
   };
 
+  const handleShortClick = (shortsArray, index) => {
+    setCurrentShort({ shorts: shortsArray, startIndex: index });
+  };
+
   const handleUploadSuccess = () => {
     setShowUpload(false);
     fetchVideos();
@@ -98,10 +104,10 @@ function App() {
       {activePage === "home" && (
         <>
           <VideoGrid videos={videos} onVideoClick={handleVideoClick} />
-          <ShortsShelf shorts={shorts} />
+          <ShortsShelf shorts={shorts} onShortClick={(index) => handleShortClick(shorts, index)} />
         </>
       )}
-      {activePage === "shorts" && <ShortsPage />}
+      {activePage === "shorts" && <ShortsPage onShortClick={handleShortClick} />}
       {activePage === "subscriptions" && <SubscriptionsPage />}
       {activePage === "you" && <YouPage />}
 
@@ -109,6 +115,14 @@ function App() {
         <UploadModal
           onClose={() => setShowUpload(false)}
           onSuccess={handleUploadSuccess}
+        />
+      )}
+
+      {currentShort && (
+        <ShortsPlayer
+          shorts={currentShort.shorts}
+          startIndex={currentShort.startIndex}
+          onClose={() => setCurrentShort(null)}
         />
       )}
     </>

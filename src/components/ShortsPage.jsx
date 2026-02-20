@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import staticShorts from '../data/shorts';
 
-function ShortsPage() {
+function ShortsPage({ onShortClick }) {
   const [shorts, setShorts] = useState(staticShorts);
-  const [playingId, setPlayingId] = useState(null);
 
   useEffect(() => {
     fetch('/api/videos?shorts=true')
@@ -25,40 +24,12 @@ function ShortsPage() {
   return (
     <div className="shorts-page">
       <div className="shorts-page-feed">
-        {shorts.map((short) => (
-          <div className="shorts-page-card" key={short.id}>
-            <div
-              className="shorts-page-thumbnail-container"
-              onClick={() => setPlayingId(playingId === short.id ? null : short.id)}
-            >
-              {playingId === short.id && short.videoUrl ? (
-                <video
-                  className="shorts-page-thumbnail"
-                  src={short.videoUrl}
-                  autoPlay
-                  loop
-                  controls
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : (
-                <>
-                  <img
-                    className="shorts-page-thumbnail"
-                    src={short.thumbnail}
-                    alt={short.title}
-                  />
-                  <div className="shorts-page-play-icon">
-                    <svg viewBox="0 0 24 24" width="48" height="48">
-                      <path fill="rgba(255,255,255,0.9)" d="M8 5v14l11-7z"/>
-                    </svg>
-                  </div>
-                </>
-              )}
-              <div className="shorts-page-overlay">
-                <p className="shorts-page-title">{short.title}</p>
-                <p className="shorts-page-views">{short.views}</p>
-              </div>
-            </div>
+        {shorts.map((short, index) => (
+          <ShortsPageCard
+            key={short.id}
+            short={short}
+            onClick={() => onShortClick(shorts, index)}
+          >
             <div className="shorts-page-actions">
               <button className="shorts-action-btn">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff">
@@ -76,9 +47,64 @@ function ShortsPage() {
                 </svg>
               </button>
             </div>
-          </div>
+          </ShortsPageCard>
         ))}
       </div>
+    </div>
+  );
+}
+
+function ShortsPageCard({ short, onClick, children }) {
+  const [hovered, setHovered] = useState(false);
+  const hoverTimer = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (short.videoUrl) {
+      hoverTimer.current = setTimeout(() => setHovered(true), 500);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(hoverTimer.current);
+    setHovered(false);
+  };
+
+  return (
+    <div className="shorts-page-card">
+      <div
+        className="shorts-page-thumbnail-container"
+        onClick={onClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {hovered && short.videoUrl ? (
+          <video
+            className="shorts-page-thumbnail hover-preview-video"
+            src={short.videoUrl}
+            muted
+            autoPlay
+            loop
+          />
+        ) : (
+          <img
+            className="shorts-page-thumbnail"
+            src={short.thumbnail}
+            alt={short.title}
+          />
+        )}
+        {!hovered && (
+          <div className="shorts-page-play-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48">
+              <path fill="rgba(255,255,255,0.9)" d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        )}
+        <div className="shorts-page-overlay">
+          <p className="shorts-page-title">{short.title}</p>
+          <p className="shorts-page-views">{short.views}</p>
+        </div>
+      </div>
+      {children}
     </div>
   );
 }
