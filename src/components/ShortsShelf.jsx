@@ -1,4 +1,8 @@
+import { useState } from 'react';
+
 function ShortsShelf({ shorts }) {
+  const [playingId, setPlayingId] = useState(null);
+
   return (
     <div className="shorts-shelf">
       <div className="shorts-header">
@@ -18,17 +22,34 @@ function ShortsShelf({ shorts }) {
       </div>
       <div className="shorts-row">
         {shorts.map((short) => (
-          <div className="short-card" key={short.id}>
+          <div
+            className="short-card"
+            key={short.id}
+            onClick={() => setPlayingId(playingId === short.id ? null : short.id)}
+          >
             <div className="short-thumbnail-container">
-              <img
-                className="short-thumbnail"
-                src={short.thumbnail}
-                alt={short.title}
-              />
-              <div className="short-title-overlay">
-                <p className="short-title">{short.title}</p>
-                <p className="short-views">{short.views}</p>
-              </div>
+              {playingId === short.id && short.videoUrl ? (
+                <video
+                  className="short-thumbnail"
+                  src={short.videoUrl}
+                  autoPlay
+                  loop
+                  controls
+                  onClick={(e) => e.stopPropagation()}
+                />
+              ) : (
+                <img
+                  className="short-thumbnail"
+                  src={short.thumbnail}
+                  alt={short.title}
+                />
+              )}
+              {playingId !== short.id && (
+                <div className="short-title-overlay">
+                  <p className="short-title">{short.title}</p>
+                  <p className="short-views">{short.views}</p>
+                </div>
+              )}
             </div>
           </div>
         ))}

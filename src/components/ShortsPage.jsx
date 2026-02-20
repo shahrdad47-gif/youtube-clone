@@ -1,17 +1,59 @@
-import shorts from '../data/shorts';
+import { useState, useEffect } from 'react';
+import staticShorts from '../data/shorts';
 
 function ShortsPage() {
+  const [shorts, setShorts] = useState(staticShorts);
+  const [playingId, setPlayingId] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/videos?shorts=true')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setShorts(data.map(v => ({
+            id: v._id,
+            thumbnail: v.thumbnailUrl,
+            title: v.title,
+            views: `${formatViews(v.views)} views`,
+            videoUrl: v.videoUrl,
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="shorts-page">
       <div className="shorts-page-feed">
         {shorts.map((short) => (
           <div className="shorts-page-card" key={short.id}>
-            <div className="shorts-page-thumbnail-container">
-              <img
-                className="shorts-page-thumbnail"
-                src={short.thumbnail}
-                alt={short.title}
-              />
+            <div
+              className="shorts-page-thumbnail-container"
+              onClick={() => setPlayingId(playingId === short.id ? null : short.id)}
+            >
+              {playingId === short.id && short.videoUrl ? (
+                <video
+                  className="shorts-page-thumbnail"
+                  src={short.videoUrl}
+                  autoPlay
+                  loop
+                  controls
+                  onClick={(e) => e.stopPropagation()}
+                />
+              ) : (
+                <>
+                  <img
+                    className="shorts-page-thumbnail"
+                    src={short.thumbnail}
+                    alt={short.title}
+                  />
+                  <div className="shorts-page-play-icon">
+                    <svg viewBox="0 0 24 24" width="48" height="48">
+                      <path fill="rgba(255,255,255,0.9)" d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </>
+              )}
               <div className="shorts-page-overlay">
                 <p className="shorts-page-title">{short.title}</p>
                 <p className="shorts-page-views">{short.views}</p>
@@ -39,6 +81,12 @@ function ShortsPage() {
       </div>
     </div>
   );
+}
+
+function formatViews(num) {
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(num >= 10_000_000 ? 0 : 1)}M`;
+  if (num >= 1_000) return `${(num / 1_000).toFixed(num >= 10_000 ? 0 : 1)}k`;
+  return String(num);
 }
 
 export default ShortsPage;

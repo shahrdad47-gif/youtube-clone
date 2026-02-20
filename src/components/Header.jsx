@@ -43,7 +43,7 @@ const notifications = [
   },
 ];
 
-function Header({ onToggleSidebar }) {
+function Header({ onToggleSidebar, onUploadClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const menuRef = useRef(null);
@@ -87,7 +87,7 @@ function Header({ onToggleSidebar }) {
       </div>
 
       <div className="right-section">
-        <div className="upload-icon-coontainer">
+        <div className="upload-icon-coontainer" onClick={onUploadClick}>
           <img className="upload-icon" src="/icons/upload.svg" alt="" />
           <div className="tooltip">Create</div>
         </div>

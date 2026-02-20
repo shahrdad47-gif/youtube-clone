@@ -1,6 +1,6 @@
 import VideoCard from "./VideoCard";
 
-function VideoGrid({ videos }) {
+function VideoGrid({ videos, onVideoClick }) {
   return (
     <div className="Video-grid">
       {videos.map((video) => (
@@ -12,6 +12,7 @@ function VideoGrid({ videos }) {
           title={video.title}
           author={video.author}
           stats={video.stats}
+          onClick={() => onVideoClick && onVideoClick(video)}
         />
       ))}
     </div>

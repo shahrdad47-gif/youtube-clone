@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 *.zip
 *.tar.gz
+
+# Backend
+.env
+server/uploads/

@@ -1,6 +1,6 @@
-function VideoCard({ thumbnail, duration, profilePic, title, author, stats }) {
+function VideoCard({ thumbnail, duration, profilePic, title, author, stats, onClick }) {
   return (
-    <div className="Video-preview">
+    <div className="Video-preview" onClick={onClick}>
       <div className="Horizon-row">
         <img className="Horizon" src={thumbnail} alt="" />
         <div className="video-time">{duration}</div>
