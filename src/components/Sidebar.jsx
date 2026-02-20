@@ -1,10 +1,8 @@
-const sidebarItems = [
-  { icon: "/icons/home.svg", label: "Home" },
-  { icon: "/icons/explore.svg", label: "Explore" },
-  { icon: "/icons/subscriptions.svg", label: "Subscriptions" },
-  { icon: "/icons/originals.svg", label: "Originals" },
-  { icon: "/icons/youtube-music.svg", label: "Music" },
-  { icon: "/icons/library.svg", label: "Library" },
+const miniSidebarItems = [
+  { key: "home", label: "Home" },
+  { key: "shorts", label: "Shorts" },
+  { key: "subscriptions", label: "Subscriptions" },
+  { key: "you", label: "You" },
 ];
 
 function Icon({ d, fill = "#f1f1f1" }) {
@@ -17,6 +15,7 @@ function Icon({ d, fill = "#f1f1f1" }) {
 
 const paths = {
   home: "M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z",
+  you: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z",
   shorts: "M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33-1.2-.5L18 9.06c1.56-.72 2.52-1.97 2.52-3.28 0-2.36-2.86-4.28-6.37-4.28S7.79 3.42 7.79 5.78c0 .38.04.74.13 1.09l-1.21.5C6.24 6.65 6 5.84 6 4.96 6 2.22 8.69 0 12 0s6 2.22 6 4.96c0 2.14-1.38 3.97-3.43 4.87zM12 24c-3.31 0-6-2.22-6-4.96 0-2.14 1.38-3.97 3.43-4.87l1.2.5-1.42.74C7.69 16.13 6.79 17.38 6.79 18.69c0 2.36 2.86 4.28 6.37 4.28s6.37-1.92 6.37-4.28c0-.38-.04-.74-.13-1.09l1.21-.5c.47.72.71 1.53.71 2.41 0 2.74-2.69 4.96-6 4.96z",
   subscriptions: "M20 8H4V6h16v2zm-2-6H6v2h12V2zm4 10v8c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2zm-6 4-6-3.27v6.53L16 16z",
   history: "M14.97 16.95 10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM22 12c0 5.51-4.49 10-10 10S2 17.51 2 12h2c0 4.41 3.59 8 8 8s8-3.59 8-8-3.59-8-8-8C8.56 4 5.85 5.48 4.28 7.8L7 8H1V2l2.72 2.72C5.41 2.34 8.46 1 12 1c6.07 0 11 4.93 11 11z",
@@ -46,7 +45,7 @@ const paths = {
 const sections = [
   {
     items: [
-      { key: "home", label: "Home", active: true },
+      { key: "home", label: "Home" },
       { key: "shorts", label: "Shorts" },
       { key: "subscriptions", label: "Subscriptions" },
     ],
@@ -104,7 +103,16 @@ const sections = [
   },
 ];
 
-function Sidebar({ expanded, onClose }) {
+const navigableKeys = new Set(["home", "shorts", "subscriptions", "you"]);
+
+function Sidebar({ expanded, onClose, activePage, onNavigate }) {
+  const handleNav = (key) => {
+    if (navigableKeys.has(key)) {
+      onNavigate(key);
+      if (expanded) onClose();
+    }
+  };
+
   return (
     <>
       {/* Overlay */}
@@ -115,9 +123,13 @@ function Sidebar({ expanded, onClose }) {
 
       {/* Mini sidebar (collapsed) */}
       <div className={`sidebar ${expanded ? 'hidden' : ''}`}>
-        {sidebarItems.map((item) => (
-          <div className="sidebar-link" key={item.label}>
-            <img src={item.icon} alt="" />
+        {miniSidebarItems.map((item) => (
+          <div
+            className={`sidebar-link ${activePage === item.key ? 'active' : ''}`}
+            key={item.label}
+            onClick={() => handleNav(item.key)}
+          >
+            <Icon d={paths[item.key]} />
             <div>{item.label}</div>
           </div>
         ))}
@@ -136,7 +148,13 @@ function Sidebar({ expanded, onClose }) {
           {sections.map((section, si) => (
             <div key={si}>
               {section.title && (
-                <h3 className="sidebar-section-title">
+                <h3
+                  className="sidebar-section-title"
+                  onClick={() => {
+                    if (section.title === "You") handleNav("you");
+                  }}
+                  style={section.title === "You" ? { cursor: "pointer" } : undefined}
+                >
                   {section.title}
                   {section.arrow && (
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="#f1f1f1" style={{ marginLeft: 4 }}>
@@ -147,8 +165,9 @@ function Sidebar({ expanded, onClose }) {
               )}
               {section.items.map((item) => (
                 <div
-                  className={`sidebar-expanded-item ${item.active ? 'active' : ''}`}
+                  className={`sidebar-expanded-item ${activePage === item.key ? 'active' : ''}`}
                   key={item.label}
+                  onClick={() => handleNav(item.key)}
                 >
                   {item.avatar ? (
                     <img className="sidebar-channel-avatar" src={item.avatar} alt="" />
