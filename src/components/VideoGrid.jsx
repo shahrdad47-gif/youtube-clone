@@ -1,6 +1,6 @@
 import VideoCard from "./VideoCard";
 
-function VideoGrid({ videos, onVideoClick }) {
+function VideoGrid({ videos, onVideoClick, hideProfilePic, onDeleteVideo }) {
   return (
     <div className="Video-grid">
       {videos.map((video) => (
@@ -13,7 +13,9 @@ function VideoGrid({ videos, onVideoClick }) {
           author={video.author}
           stats={video.stats}
           videoUrl={video.videoUrl}
+          hideProfilePic={hideProfilePic}
           onClick={() => onVideoClick && onVideoClick(video)}
+          onDelete={onDeleteVideo && typeof video.id === 'string' ? () => onDeleteVideo(video.id) : undefined}
         />
       ))}
     </div>

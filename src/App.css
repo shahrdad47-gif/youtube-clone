@@ -360,6 +360,26 @@ body {
   border-radius: 10px;
 }
 
+.video-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  z-index: 10;
+}
+
+.video-delete-btn:hover {
+  background: #cc0000;
+}
+
 .video-time {
   font-family: Arial;
   font-weight: 500;
@@ -1777,15 +1797,16 @@ body {
 }
 
 .channel-banner {
-  width: 100%;
-  border-radius: 12px;
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-right: -24px;
   overflow: hidden;
   margin-bottom: 24px;
 }
 
 .channel-banner img {
   width: 100%;
-  height: 150px;
+  height: 200px;
   object-fit: cover;
 }
 
@@ -1797,8 +1818,8 @@ body {
 }
 
 .channel-header-avatar {
-  width: 80px;
-  height: 80px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -1807,12 +1828,20 @@ body {
 .channel-header-info {
   flex: 1;
   min-width: 0;
+  padding-top: 12px;
+}
+
+.channel-header-top-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 4px;
 }
 
 .channel-header-name {
   font-family: Roboto, Arial;
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 36px;
+  font-weight: 700;
   color: #f1f1f1;
   margin: 0;
 }
@@ -1830,6 +1859,33 @@ body {
   color: #aaa;
   margin: 8px 0 0;
   line-height: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+}
+
+.channel-header-desc.expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.channel-desc-more {
+  color: #f1f1f1;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.channel-desc-less {
+  color: #f1f1f1;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  margin-top: 4px;
+  display: inline-block;
 }
 
 .channel-subscribe-btn {
@@ -1892,6 +1948,261 @@ body {
 
 .channel-shorts-section {
   margin-top: 32px;
+}
+
+/* Featured video on channel Home tab */
+.channel-featured-video {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  padding: 16px;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.channel-featured-video:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.channel-featured-thumbnail {
+  position: relative;
+  flex-shrink: 0;
+  width: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.channel-featured-thumbnail img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+}
+
+.channel-featured-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.channel-featured-title {
+  font-family: Roboto, Arial;
+  font-size: 20px;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin: 0;
+  line-height: 28px;
+}
+
+.channel-featured-stats {
+  font-family: Roboto, Arial;
+  font-size: 14px;
+  color: #aaa;
+  margin: 0;
+}
+
+/* Channel video grid: hide redundant profile pics */
+.channel-video-grid .channel-picture {
+  display: none;
+}
+
+.channel-video-grid .video-info-grid {
+  grid-template-columns: 1fr;
+}
+
+/* ========== Sign-In Page ========== */
+
+.signin-page {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0f0f0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.signin-card {
+  background-color: #202124;
+  border: 1px solid #303030;
+  border-radius: 8px;
+  padding: 48px 40px 36px;
+  width: 450px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signin-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.signin-header h1 {
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #e8eaed;
+  margin: 16px 0 0;
+}
+
+.signin-header p {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 16px;
+  color: #9aa0a6;
+  margin: 8px 0 0;
+}
+
+.signin-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.signin-input {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #5f6368;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #e8eaed;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.signin-input:focus {
+  border-color: #8ab4f8;
+  border-width: 2px;
+  padding: 12px 14px;
+}
+
+.signin-input::placeholder {
+  color: #9aa0a6;
+}
+
+.signin-name-row {
+  display: flex;
+  gap: 16px;
+}
+
+.signin-name-row .signin-input {
+  flex: 1;
+}
+
+.signin-error {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 13px;
+  color: #f28b82;
+  margin: 0;
+}
+
+.signin-link {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #8ab4f8;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.signin-link:hover {
+  text-decoration: underline;
+}
+
+.signin-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.signin-btn {
+  background-color: #8ab4f8;
+  color: #202124;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.25px;
+}
+
+.signin-btn:hover {
+  background-color: #aecbfa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.signin-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.signin-divider::before,
+.signin-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #5f6368;
+}
+
+.signin-divider span {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  color: #9aa0a6;
+}
+
+.signin-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 24px;
+  border: 1px solid #5f6368;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #e8eaed;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.25px;
+}
+
+.signin-google-btn:hover {
+  background-color: rgba(138, 180, 248, 0.04);
+  border-color: #8ab4f8;
+}
+
+.signin-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #8ab4f8;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 24px;
+  padding: 8px 0;
+}
+
+.signin-back-btn:hover {
+  text-decoration: underline;
 }
 
 /* ========== Responsive ========== */

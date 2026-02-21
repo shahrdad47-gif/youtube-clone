@@ -46,7 +46,7 @@ const notifications = [
 // Placeholder Google Client ID — replace with your real one
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
-function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChannelClick, videos = [], channels = [], user, onSignIn }) {
+function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChannelClick, videos = [], channels = [], user, onSignIn, onSignInClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -134,10 +134,7 @@ function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChann
 
   const handleProfileClick = () => {
     if (!user) {
-      // Trigger Google One Tap / prompt
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.prompt();
-      }
+      onSignInClick?.();
     } else {
       setMenuOpen(!menuOpen);
     }

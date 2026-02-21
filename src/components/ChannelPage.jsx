@@ -3,6 +3,7 @@ import VideoGrid from './VideoGrid';
 
 function ChannelPage({ channel, videos, shorts, onBack, onVideoClick, onShortClick }) {
   const [activeTab, setActiveTab] = useState('home');
+  const [descExpanded, setDescExpanded] = useState(false);
 
   const channelVideos = videos.filter(v => v.author === channel.name);
   const channelShorts = shorts.filter(s => s.title.toLowerCase().includes(channel.name.toLowerCase()));
@@ -13,6 +14,11 @@ function ChannelPage({ channel, videos, shorts, onBack, onVideoClick, onShortCli
     : channelShorts;
 
   const displayShorts = corgiShorts.length > 0 ? corgiShorts : channelShorts;
+
+  const featuredVideo = channelVideos.length > 0 ? channelVideos[0] : null;
+  const remainingVideos = channelVideos.slice(1);
+
+  const tabs = ['home', 'videos', 'shorts', 'playlists', 'community'];
 
   return (
     <div className="channel-page">
@@ -30,17 +36,27 @@ function ChannelPage({ channel, videos, shorts, onBack, onVideoClick, onShortCli
       <div className="channel-header">
         <img className="channel-header-avatar" src={channel.avatar} alt="" />
         <div className="channel-header-info">
-          <h1 className="channel-header-name">{channel.name}</h1>
+          <div className="channel-header-top-row">
+            <h1 className="channel-header-name">{channel.name}</h1>
+            <button className="channel-subscribe-btn">Subscribe</button>
+          </div>
           <p className="channel-header-meta">
-            {channel.handle} · {channel.subscriberCount}
+            {channel.handle} · {channel.subscriberCount} · {channelVideos.length} video{channelVideos.length !== 1 ? 's' : ''}
           </p>
-          <p className="channel-header-desc">{channel.description}</p>
+          <p className={`channel-header-desc ${descExpanded ? 'expanded' : ''}`}>
+            {channel.description}
+            {!descExpanded && (
+              <span className="channel-desc-more" onClick={() => setDescExpanded(true)}>...more</span>
+            )}
+          </p>
+          {descExpanded && (
+            <span className="channel-desc-less" onClick={() => setDescExpanded(false)}>Show less</span>
+          )}
         </div>
-        <button className="channel-subscribe-btn">Subscribe</button>
       </div>
 
       <div className="channel-tabs">
-        {['home', 'videos', 'shorts'].map(tab => (
+        {tabs.map(tab => (
           <button
             key={tab}
             className={`channel-tab ${activeTab === tab ? 'active' : ''}`}
@@ -52,37 +68,63 @@ function ChannelPage({ channel, videos, shorts, onBack, onVideoClick, onShortCli
       </div>
 
       <div className="channel-content">
-        {(activeTab === 'home' || activeTab === 'videos') && (
+        {activeTab === 'home' && (
           <>
-            {channelVideos.length > 0 ? (
-              <VideoGrid videos={channelVideos} onVideoClick={onVideoClick} />
-            ) : (
-              <p className="channel-empty">No videos yet</p>
+            {featuredVideo && (
+              <div className="channel-featured-video" onClick={() => onVideoClick(featuredVideo)}>
+                <div className="channel-featured-thumbnail">
+                  <img src={featuredVideo.thumbnail} alt="" />
+                  <div className="video-time">{featuredVideo.duration}</div>
+                </div>
+                <div className="channel-featured-info">
+                  <p className="channel-featured-title">{featuredVideo.title}</p>
+                  <p className="channel-featured-stats">{featuredVideo.stats}</p>
+                </div>
+              </div>
+            )}
+            {remainingVideos.length > 0 && (
+              <div className="channel-video-grid">
+                <VideoGrid videos={remainingVideos} onVideoClick={onVideoClick} hideProfilePic />
+              </div>
+            )}
+            {displayShorts.length > 0 && (
+              <div className="channel-shorts-section">
+                <h2 className="search-section-title">Shorts</h2>
+                <div className="search-shorts-row">
+                  {displayShorts.map((short, index) => (
+                    <div
+                      key={short.id}
+                      className="short-card"
+                      onClick={() => onShortClick(displayShorts, index)}
+                    >
+                      <div className="short-thumbnail-container">
+                        <img className="short-thumbnail" src={short.thumbnail} alt="" />
+                        <div className="short-title-overlay">
+                          <p className="short-title">{short.title}</p>
+                          <p className="short-views">{short.views}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!featuredVideo && displayShorts.length === 0 && (
+              <p className="channel-empty">No content yet</p>
             )}
           </>
         )}
 
-        {activeTab === 'home' && displayShorts.length > 0 && (
-          <div className="channel-shorts-section">
-            <h2 className="search-section-title">Shorts</h2>
-            <div className="search-shorts-row">
-              {displayShorts.map((short, index) => (
-                <div
-                  key={short.id}
-                  className="short-card"
-                  onClick={() => onShortClick(displayShorts, index)}
-                >
-                  <div className="short-thumbnail-container">
-                    <img className="short-thumbnail" src={short.thumbnail} alt="" />
-                    <div className="short-title-overlay">
-                      <p className="short-title">{short.title}</p>
-                      <p className="short-views">{short.views}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {activeTab === 'videos' && (
+          <>
+            {channelVideos.length > 0 ? (
+              <div className="channel-video-grid">
+                <VideoGrid videos={channelVideos} onVideoClick={onVideoClick} hideProfilePic />
+              </div>
+            ) : (
+              <p className="channel-empty">No videos yet</p>
+            )}
+          </>
         )}
 
         {activeTab === 'shorts' && (
@@ -109,6 +151,14 @@ function ChannelPage({ channel, videos, shorts, onBack, onVideoClick, onShortCli
               <p className="channel-empty">No shorts yet</p>
             )}
           </>
+        )}
+
+        {activeTab === 'playlists' && (
+          <p className="channel-empty">No playlists yet</p>
+        )}
+
+        {activeTab === 'community' && (
+          <p className="channel-empty">No community posts yet</p>
         )}
       </div>
     </div>

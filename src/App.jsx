@@ -12,6 +12,7 @@ import VideoPlayer from './components/VideoPlayer'
 import ShortsPlayer from './components/ShortsPlayer'
 import SearchResults from './components/SearchResults'
 import ChannelPage from './components/ChannelPage'
+import SignInPage from './components/SignInPage'
 import staticVideos from './data/videos'
 import staticShorts from './data/shorts'
 import channels from './data/channels'
@@ -83,6 +84,13 @@ function App() {
     fetchVideos();
   };
 
+  const handleDeleteVideo = async (videoId) => {
+    try {
+      const res = await fetch(`/api/videos/${videoId}`, { method: 'DELETE' });
+      if (res.ok) fetchVideos();
+    } catch (err) {}
+  };
+
   const handleSearch = (query) => {
     setSearchQuery(query);
     setActivePage("search");
@@ -123,6 +131,7 @@ function App() {
           channels={channels}
           user={user}
           onSignIn={setUser}
+          onSignInClick={() => setActivePage("signin")}
         />
         <VideoPlayer video={currentVideo} onBack={() => setCurrentVideo(null)} />
       </>
@@ -136,6 +145,12 @@ function App() {
         onUploadClick={() => setShowUpload(true)}
         onSearch={handleSearch}
         onLogoClick={handleLogoClick}
+        onChannelClick={handleChannelClick}
+        videos={videos}
+        channels={channels}
+        user={user}
+        onSignIn={setUser}
+        onSignInClick={() => setActivePage("signin")}
       />
       <Sidebar
         expanded={sidebarExpanded}
@@ -143,9 +158,15 @@ function App() {
         activePage={activePage}
         onNavigate={handleNavigate}
       />
+      {activePage === "signin" && (
+        <SignInPage
+          onSignIn={(userData) => { setUser(userData); setActivePage("home"); }}
+          onBack={() => setActivePage("home")}
+        />
+      )}
       {activePage === "home" && (
         <>
-          <VideoGrid videos={videos} onVideoClick={handleVideoClick} />
+          <VideoGrid videos={videos} onVideoClick={handleVideoClick} onDeleteVideo={handleDeleteVideo} />
           <ShortsShelf shorts={shorts} onShortClick={(index) => handleShortClick(shorts, index)} />
         </>
       )}
