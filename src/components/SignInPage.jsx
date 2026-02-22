@@ -21,7 +21,7 @@ function saveAccount(account) {
   localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
 }
 
-function SignInPage({ onSignIn, onBack }) {
+function SignInPage({ onSignIn, onBack, onGoogleSignIn }) {
   const [mode, setMode] = useState('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -87,9 +87,7 @@ function SignInPage({ onSignIn, onBack }) {
   };
 
   const handleGoogleSignIn = () => {
-    if (window.google?.accounts?.id) {
-      window.google.accounts.id.prompt();
-    }
+    if (onGoogleSignIn) onGoogleSignIn();
   };
 
   return (

@@ -1,4 +1,23 @@
-function VideoPlayer({ video, onBack }) {
+import { useEffect, useState } from 'react';
+
+function VideoPlayer({ video, onBack, onView }) {
+  const [views, setViews] = useState(video.views ?? null);
+
+  useEffect(() => {
+    if (!video.id) return;
+    fetch(`/api/videos/${video.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.views != null) {
+          setViews(data.views);
+          if (onView) onView(video.id, data.views);
+        }
+      })
+      .catch(() => {});
+  }, [video.id]);
+
+  const displayStats = views != null ? `${formatViews(views)} views` : video.stats;
+
   return (
     <div className="video-player-page">
       <div className="video-player-main">
@@ -21,7 +40,7 @@ function VideoPlayer({ video, onBack }) {
             </div>
           </div>
           <div className="video-player-stats">
-            <span>{video.stats}</span>
+            <span>{displayStats}</span>
           </div>
           {video.description && (
             <div className="video-player-description">
@@ -40,6 +59,12 @@ function VideoPlayer({ video, onBack }) {
       </div>
     </div>
   );
+}
+
+function formatViews(num) {
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(num >= 10_000_000 ? 0 : 1)}M`;
+  if (num >= 1_000) return `${(num / 1_000).toFixed(num >= 10_000 ? 0 : 1)}k`;
+  return String(num);
 }
 
 export default VideoPlayer;

@@ -30,8 +30,10 @@ function VideoCard({ thumbnail, duration, profilePic, title, author, stats, onCl
             autoPlay
             loop
           />
-        ) : (
+        ) : thumbnail ? (
           <img className="Horizon" src={thumbnail} alt="" />
+        ) : (
+          <div className="Horizon video-thumb-placeholder" />
         )}
         {!hovered && <div className="video-time">{duration}</div>}
         {onDelete && hovered && (
@@ -49,7 +51,13 @@ function VideoCard({ thumbnail, duration, profilePic, title, author, stats, onCl
       <div className="video-info-grid">
         {!hideProfilePic && (
           <div className="channel-picture">
-            <img className="profile-picture" src={profilePic} alt="" />
+            {profilePic ? (
+              <img className="profile-picture" src={profilePic} alt="" />
+            ) : (
+              <svg className="profile-picture" viewBox="0 0 24 24">
+                <path fill="#aaa" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 2.13-.74 4.08-1.97 5.63-1.15-1.36-3.14-2.3-5.53-2.66a4 4 0 1 0-3 0c-2.39.36-4.38 1.3-5.53 2.66A8.96 8.96 0 0 1 3 12c0-4.96 4.04-9 9-9zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
+              </svg>
+            )}
           </div>
         )}
         <div className="video-info">

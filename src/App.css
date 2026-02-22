@@ -360,6 +360,11 @@ body {
   border-radius: 10px;
 }
 
+.video-thumb-placeholder {
+  aspect-ratio: 16 / 9;
+  background: #272727;
+}
+
 .video-delete-btn {
   position: absolute;
   top: 8px;
@@ -2223,4 +2228,770 @@ body {
   .Video-grid {
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+/* ========== Google Sign-In Page ========== */
+
+.google-signin-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #202124;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.google-signin-card {
+  background-color: #303134;
+  border-radius: 28px;
+  padding: 48px 40px 36px;
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.google-signin-logo {
+  margin-bottom: 24px;
+}
+
+.google-signin-title {
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #e8eaed;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.google-signin-subtitle {
+  font-size: 14px;
+  color: #9aa0a6;
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+.google-signin-email-chip {
+  font-size: 14px;
+  color: #e8eaed;
+  background: #3c4043;
+  border: 1px solid #5f6368;
+  border-radius: 20px;
+  padding: 6px 14px;
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.google-signin-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid #5f6368;
+  border-radius: 4px;
+  color: #e8eaed;
+  font-size: 16px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.google-signin-input:focus {
+  border-color: #8ab4f8;
+  border-width: 2px;
+}
+
+.google-signin-name-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.google-signin-name-row .google-signin-input {
+  flex: 1;
+}
+
+.google-signin-error {
+  font-size: 13px;
+  color: #f28b82;
+  margin: -8px 0 12px;
+  align-self: flex-start;
+}
+
+.google-signin-link {
+  font-size: 14px;
+  color: #8ab4f8;
+  text-decoration: none;
+  align-self: flex-start;
+  margin-bottom: 24px;
+}
+
+.google-signin-link:hover {
+  text-decoration: underline;
+}
+
+.google-signin-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.google-signin-back-btn {
+  background: none;
+  border: none;
+  color: #8ab4f8;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 4px;
+  letter-spacing: 0.25px;
+}
+
+.google-signin-back-btn:hover {
+  background-color: rgba(138, 180, 248, 0.08);
+}
+
+.google-signin-next-btn {
+  background-color: #8ab4f8;
+  border: none;
+  border-radius: 4px;
+  color: #202124;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 24px;
+  letter-spacing: 0.25px;
+}
+
+.google-signin-next-btn:hover {
+  background-color: #93baf9;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ========== YouTube-like Upload Modal ========== */
+
+.yt-upload-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yt-upload-dialog {
+  background: #282828;
+  border-radius: 12px;
+  width: 680px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 90vh;
+}
+
+.yt-upload-dialog--full {
+  width: 960px;
+  height: 85vh;
+}
+
+.yt-upload-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #404040;
+  flex-shrink: 0;
+}
+
+.yt-upload-dialog-header > span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.yt-upload-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  border-radius: 50%;
+}
+
+.yt-upload-close:hover { color: #fff; background: #3f3f3f; }
+
+/* ─── Select phase ─────────────────────── */
+
+.yt-upload-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  flex: 1;
+  margin: 20px;
+  border: 2px dashed transparent;
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: default;
+}
+
+.yt-upload-drop.dragover {
+  border-color: #3ea6ff;
+  background: rgba(62, 166, 255, 0.05);
+}
+
+.yt-upload-drop-icon {
+  background: #383838;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.yt-upload-drop-title {
+  font-size: 20px;
+  color: #fff;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.yt-upload-drop-sub {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+.yt-upload-select-btn {
+  background: #3ea6ff;
+  border: none;
+  border-radius: 2px;
+  color: #0d0d0d;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 28px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.yt-upload-select-btn:hover { background: #65b8ff; }
+
+.yt-upload-terms {
+  font-size: 12px;
+  color: #717171;
+  text-align: center;
+  padding: 16px 24px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.yt-upload-terms a { color: #3ea6ff; text-decoration: none; }
+
+/* ─── Header actions ───────────────────── */
+
+.yt-upload-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.yt-upload-draft-btn {
+  background: none;
+  border: none;
+  color: #3ea6ff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.yt-upload-draft-btn:hover { text-decoration: underline; }
+
+/* ─── Step tabs ────────────────────────── */
+
+.yt-upload-tabs {
+  display: flex;
+  border-bottom: 1px solid #404040;
+  padding: 0 24px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.yt-upload-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #aaa;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 14px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: color 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.yt-upload-tab.active { color: #fff; border-bottom-color: #3ea6ff; }
+.yt-upload-tab.done { color: #2ba640; }
+
+.yt-tab-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #505050;
+  color: #fff;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.yt-upload-tab.active .yt-tab-num { background: #3ea6ff; color: #000; }
+.yt-upload-tab.done .yt-tab-num { background: #2ba640; }
+
+/* ─── Body split ───────────────────────── */
+
+.yt-upload-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.yt-upload-left {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 24px;
+}
+
+.yt-upload-right {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 24px 16px;
+  border-left: 1px solid #404040;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ─── Form fields ──────────────────────── */
+
+.yt-upload-section-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 20px;
+}
+
+.yt-upload-section-sub {
+  font-size: 13px;
+  color: #aaa;
+  margin: -12px 0 20px;
+}
+
+.yt-upload-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.yt-upload-field-input {
+  background: #121212;
+  border: 1px solid #606060;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  padding: 12px 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.yt-upload-field-input:focus { border-color: #3ea6ff; border-width: 2px; }
+
+.yt-upload-field-textarea {
+  background: #121212;
+  border: 1px solid #606060;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  padding: 12px 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.yt-upload-field-textarea:focus { border-color: #3ea6ff; border-width: 2px; }
+
+.yt-upload-char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #717171;
+}
+
+/* Thumbnail */
+
+.yt-upload-thumbnail-area {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 4px;
+}
+
+.yt-upload-thumb-btn {
+  background: #383838;
+  border: 1.5px dashed #606060;
+  border-radius: 4px;
+  color: #aaa;
+  font-size: 13px;
+  padding: 20px 28px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.yt-upload-thumb-btn:hover { border-color: #3ea6ff; color: #3ea6ff; }
+
+.yt-upload-thumb-preview { position: relative; }
+
+.yt-upload-thumb-preview img {
+  width: 168px;
+  height: 94px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.yt-upload-thumb-change {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.7);
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.yt-upload-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  margin-top: 4px;
+}
+
+/* Video elements */
+
+.yt-upload-element-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid #404040;
+  gap: 16px;
+}
+
+.yt-upload-element-name { font-size: 14px; color: #fff; margin: 0 0 4px; }
+.yt-upload-element-desc { font-size: 13px; color: #aaa; margin: 0; }
+
+.yt-upload-element-btn {
+  background: none;
+  border: 1px solid #606060;
+  border-radius: 2px;
+  color: #3ea6ff;
+  font-size: 13px;
+  padding: 8px 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.yt-upload-element-btn:hover { background: rgba(62,166,255,0.1); }
+
+/* Checks */
+
+.yt-upload-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 0;
+  border-bottom: 1px solid #404040;
+}
+
+/* Visibility */
+
+.yt-upload-radio-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+}
+
+.yt-upload-radio-row input[type="radio"] {
+  margin-top: 3px;
+  accent-color: #3ea6ff;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.yt-upload-radio-label { font-size: 14px; color: #fff; margin: 0 0 4px; }
+.yt-upload-radio-desc { font-size: 13px; color: #aaa; margin: 0; }
+
+.yt-upload-error { color: #f28b82; font-size: 13px; margin-top: 12px; }
+
+/* Right preview */
+
+.yt-upload-preview {
+  background: #121212;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+
+.yt-upload-preview-img,
+.yt-upload-preview-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.yt-upload-preview-filename {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+  word-break: break-all;
+}
+
+.yt-upload-preview-size { font-size: 12px; color: #717171; margin: 0; }
+
+/* ─── Footer ───────────────────────────── */
+
+.yt-upload-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid #404040;
+  flex-shrink: 0;
+}
+
+.yt-upload-footer-back {
+  background: none;
+  border: none;
+  color: #3ea6ff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 2px;
+}
+
+.yt-upload-footer-back:disabled { color: #555; cursor: default; }
+.yt-upload-footer-back:not(:disabled):hover { background: rgba(62,166,255,0.1); }
+
+.yt-upload-footer-next {
+  background: #3ea6ff;
+  border: none;
+  border-radius: 2px;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 28px;
+  cursor: pointer;
+}
+
+.yt-upload-footer-next:hover { background: #65b8ff; }
+
+/* ─── Uploading phase ──────────────────── */
+
+.yt-uploading-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 48px;
+  gap: 18px;
+}
+
+.yt-uploading-thumb {
+  width: 240px;
+  height: 135px;
+  background: #121212;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.yt-uploading-thumb img,
+.yt-uploading-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.yt-uploading-title { font-size: 16px; color: #fff; margin: 0; text-align: center; }
+.yt-uploading-sub { font-size: 13px; color: #aaa; margin: 0; }
+
+.yt-uploading-bar-bg {
+  width: 340px;
+  height: 4px;
+  background: #404040;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.yt-uploading-bar {
+  height: 100%;
+  background: #3ea6ff;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* ─── Done phase ───────────────────────── */
+
+.yt-done-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 48px;
+  gap: 18px;
+}
+
+.yt-done-check {
+  width: 72px;
+  height: 72px;
+  background: #1a3a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yt-done-title { font-size: 22px; color: #fff; margin: 0; }
+
+.yt-done-thumb {
+  width: 240px;
+  height: 135px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.yt-done-filename {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+  text-align: center;
+  max-width: 340px;
+  word-break: break-all;
+}
+
+.yt-done-btn {
+  background: #3ea6ff;
+  border: none;
+  border-radius: 2px;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 40px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.yt-done-btn:hover { background: #65b8ff; }
+
+/* Short toggle in upload modal */
+.yt-upload-short-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  padding: 14px;
+  border: 1px solid #404040;
+  border-radius: 6px;
+  background: #1e1e1e;
+  transition: border-color 0.2s;
+}
+
+.yt-upload-short-toggle:hover { border-color: #606060; }
+
+.yt-upload-short-toggle input[type="checkbox"] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #ff0000;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.yt-upload-short-toggle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.yt-upload-short-label {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.yt-upload-short-badge {
+  background: #ff0000;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+}
+
+.yt-upload-short-desc {
+  font-size: 12px;
+  color: #aaa;
 }

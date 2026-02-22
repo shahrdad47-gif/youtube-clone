@@ -13,6 +13,7 @@ import ShortsPlayer from './components/ShortsPlayer'
 import SearchResults from './components/SearchResults'
 import ChannelPage from './components/ChannelPage'
 import SignInPage from './components/SignInPage'
+import GoogleSignInPage from './components/GoogleSignInPage'
 import staticVideos from './data/videos'
 import staticShorts from './data/shorts'
 import channels from './data/channels'
@@ -118,6 +119,14 @@ function App() {
     setActivePage("channel");
   };
 
+  const handleVideoView = (videoId, newViews) => {
+    setVideos(prev => prev.map(v =>
+      v.id === videoId
+        ? { ...v, views: newViews, stats: `${formatViews(newViews)} views` }
+        : v
+    ));
+  };
+
   if (currentVideo) {
     return (
       <>
@@ -133,7 +142,7 @@ function App() {
           onSignIn={setUser}
           onSignInClick={() => setActivePage("signin")}
         />
-        <VideoPlayer video={currentVideo} onBack={() => setCurrentVideo(null)} />
+        <VideoPlayer video={currentVideo} onBack={() => setCurrentVideo(null)} onView={handleVideoView} />
       </>
     );
   }
@@ -162,6 +171,13 @@ function App() {
         <SignInPage
           onSignIn={(userData) => { setUser(userData); setActivePage("home"); }}
           onBack={() => setActivePage("home")}
+          onGoogleSignIn={() => setActivePage("google-signin")}
+        />
+      )}
+      {activePage === "google-signin" && (
+        <GoogleSignInPage
+          onSignIn={(userData) => { setUser(userData); setActivePage("home"); }}
+          onBack={() => setActivePage("signin")}
         />
       )}
       {activePage === "home" && (
