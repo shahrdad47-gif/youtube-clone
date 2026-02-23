@@ -50,15 +50,26 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/videos/:id
+// GET /api/videos/:id  (no increment — just fetch)
 router.get('/:id', async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id)
+      .populate('author', 'username handle avatar subscriberCount');
+    if (!video) return res.status(404).json({ message: 'Video not found' });
+    res.json(video);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// POST /api/videos/:id/view  (increment views by 1)
+router.post('/:id/view', async (req, res) => {
   try {
     const video = await Video.findByIdAndUpdate(
       req.params.id,
       { $inc: { views: 1 } },
       { new: true },
     ).populate('author', 'username handle avatar subscriberCount');
-
     if (!video) return res.status(404).json({ message: 'Video not found' });
     res.json(video);
   } catch (error) {

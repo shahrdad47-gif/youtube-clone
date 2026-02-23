@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function VideoPlayer({ video, onBack, onView }) {
   const [views, setViews] = useState(video.views ?? null);
+  const viewedRef = useRef(null);
 
   useEffect(() => {
-    if (!video.id) return;
-    fetch(`/api/videos/${video.id}`)
+    if (!video.id || viewedRef.current === video.id) return;
+    viewedRef.current = video.id;
+    fetch(`/api/videos/${video.id}/view`, { method: 'POST' })
       .then(res => res.json())
       .then(data => {
         if (data.views != null) {
