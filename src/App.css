@@ -1660,22 +1660,22 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #3ea6ff;
+  background: #222222;
+  border: 1px solid #303030;
   border-radius: 20px;
-  padding: 5px 14px;
+  padding: 5px 12px 5px 10px;
   cursor: pointer;
   white-space: nowrap;
-}
-
-.sign-in-btn:hover {
-  background-color: rgba(62, 166, 255, 0.1);
-}
-
-.sign-in-btn span {
   font-family: Roboto, Arial;
   font-size: 14px;
   font-weight: 500;
-  color: #3ea6ff;
+  color: #f1f1f1;
+  letter-spacing: 0.2px;
+  transition: background 0.15s;
+}
+
+.sign-in-btn:hover {
+  background-color: #3a3a3a;
 }
 
 /* ========== Search Results ========== */
@@ -2995,3 +2995,138 @@ form {
   font-size: 12px;
   color: #aaa;
 }
+
+/* ── Sign-in: Google primary button ── */
+.signin-google-primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border: 1px solid #4a4a4a;
+  border-radius: 24px;
+  background: #303134;
+  color: #e8eaed;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  letter-spacing: 0.25px;
+}
+
+.signin-google-primary-btn:hover {
+  background: #3c4043;
+  border-color: #8ab4f8;
+}
+
+/* ── Sign-in: email secondary button ── */
+.signin-email-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #4a4a4a;
+  border-radius: 24px;
+  background: transparent;
+  color: #8ab4f8;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.25px;
+}
+
+.signin-email-btn:hover {
+  background: rgba(138, 180, 248, 0.06);
+}
+
+/* ── Sign-in: back to options link ── */
+.signin-back-to-main {
+  background: none;
+  border: none;
+  color: #8ab4f8;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  padding: 0;
+  align-self: flex-start;
+}
+
+.signin-back-to-main:hover { text-decoration: underline; }
+
+/* ── Sign-in: create account footer ── */
+.signin-main-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ── Google account picker ── */
+.gsi-account-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #3c4043;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.gsi-account-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #3c4043;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  width: 100%;
+}
+
+.gsi-account-row:last-child { border-bottom: none; }
+
+.gsi-account-row:hover { background: rgba(255,255,255,0.06); }
+
+.gsi-account-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.gsi-avatar-icon {
+  background: #5f6368;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gsi-account-info { flex: 1; min-width: 0; }
+
+.gsi-account-name {
+  font-size: 14px;
+  color: #e8eaed;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gsi-account-email {
+  font-size: 12px;
+  color: #9aa0a6;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gsi-another .gsi-account-name { color: #8ab4f8; }

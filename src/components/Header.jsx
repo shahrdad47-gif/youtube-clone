@@ -287,12 +287,12 @@ function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChann
               onClick={handleProfileClick}
             />
           ) : (
-            <div className="sign-in-btn" onClick={handleProfileClick}>
-              <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="#3ea6ff" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 2.13-.74 4.08-1.97 5.63-1.15-1.36-3.14-2.3-5.53-2.66a4 4 0 1 0-3 0c-2.39.36-4.38 1.3-5.53 2.66A8.96 8.96 0 0 1 3 12c0-4.96 4.04-9 9-9zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
+            <button className="sign-in-btn" onClick={handleProfileClick}>
+              <svg viewBox="0 0 24 24" width="20" height="20" style={{flexShrink:0}}>
+                <path fill="#f1f1f1" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 1c4.96 0 9 4.04 9 9 0 2.13-.74 4.08-1.97 5.63-1.15-1.36-3.14-2.3-5.53-2.66a4 4 0 1 0-3 0c-2.39.36-4.38 1.3-5.53 2.66A8.96 8.96 0 0 1 3 12c0-4.96 4.04-9 9-9zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
               </svg>
-              <span>Sign in</span>
-            </div>
+              Sign in
+            </button>
           )}
           {menuOpen && user && (
             <div className="profile-dropdown">
