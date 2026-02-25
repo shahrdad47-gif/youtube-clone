@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js';
 import auth from '../middleware/auth.js';
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router = Router();
 
@@ -58,6 +61,51 @@ router.post('/login', async (req, res) => {
     res.json({ token, user });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// POST /api/auth/google
+router.post('/google', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ message: 'Missing credential' });
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const { sub, email, name, picture } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+    if (user) {
+      if (!user.googleId) {
+        user.googleId = sub;
+        user.authProvider = 'google';
+        await user.save();
+      }
+    } else {
+      const baseUsername = name.replace(/\s+/g, '');
+      let username = baseUsername;
+      let suffix = 1;
+      while (await User.findOne({ username })) {
+        username = `${baseUsername}${suffix++}`;
+      }
+      user = await User.create({
+        username,
+        email,
+        avatar: picture,
+        googleId: sub,
+        authProvider: 'google',
+        handle: `@${username.toLowerCase()}`,
+      });
+    }
+
+    const token = generateToken(user._id);
+    res.json({ token, user });
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid Google credential' });
   }
 });
 

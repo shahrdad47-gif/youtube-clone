@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const ACCOUNTS_KEY = 'yt_accounts';
 
@@ -30,8 +30,31 @@ const GoogleIcon = () => (
   </svg>
 );
 
-function SignInPage({ onSignIn, onBack, onGoogleSignIn }) {
+function SignInPage({ onSignIn, onBack }) {
   const [view, setView] = useState('main'); // main | email | signup
+  const googleBtnRef = useRef(null);
+
+  useEffect(() => {
+    const render = () => {
+      if (window.google?.accounts?.id && googleBtnRef.current) {
+        window.google.accounts.id.renderButton(googleBtnRef.current, {
+          theme: 'filled_black',
+          size: 'large',
+          width: 300,
+          text: 'continue_with',
+          shape: 'rectangular',
+        });
+      }
+    };
+    if (window.google?.accounts?.id) {
+      render();
+    } else {
+      const id = setInterval(() => {
+        if (window.google?.accounts?.id) { render(); clearInterval(id); }
+      }, 200);
+      return () => clearInterval(id);
+    }
+  }, []);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -75,11 +98,8 @@ function SignInPage({ onSignIn, onBack, onGoogleSignIn }) {
               <p>to continue to YouTube</p>
             </div>
 
-            {/* Primary: Google */}
-            <button className="signin-google-primary-btn" type="button" onClick={() => onGoogleSignIn?.()}>
-              <GoogleIcon />
-              Sign in with Google
-            </button>
+            {/* Primary: Google — rendered by Google SDK */}
+            <div ref={googleBtnRef} style={{ minHeight: 44, display: 'flex', justifyContent: 'center' }} />
 
             <div className="signin-divider"><span>or</span></div>
 

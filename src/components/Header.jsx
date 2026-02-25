@@ -43,8 +43,7 @@ const notifications = [
   },
 ];
 
-// Placeholder Google Client ID — replace with your real one
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChannelClick, videos = [], channels = [], user, onSignIn, onSignInClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -97,29 +96,34 @@ function Header({ onToggleSidebar, onUploadClick, onSearch, onLogoClick, onChann
       ).slice(0, 5 - matchingChannels.length)
     : [];
 
-  // Google Sign-In
+  // Keep onSignIn in a ref so the Google callback always calls the latest version
+  const onSignInRef = useRef(onSignIn);
+  useEffect(() => { onSignInRef.current = onSignIn; }, [onSignIn]);
+
+  // Google Sign-In — initialize only once
   const initGoogleSignIn = useCallback(() => {
     if (!window.google?.accounts?.id) return;
     window.google.accounts.id.initialize({
       client_id: GOOGLE_CLIENT_ID,
-      callback: (response) => {
-        // Decode JWT payload
+      callback: async (response) => {
         try {
-          const payload = JSON.parse(atob(response.credential.split('.')[1]));
-          onSignIn?.({
-            name: payload.name,
-            email: payload.email,
-            avatar: payload.picture,
+          const res = await fetch('/api/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: response.credential }),
           });
-        } catch {
-          // silently fail
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.message || 'Google sign-in failed');
+          localStorage.setItem('yt_token', data.token);
+          onSignInRef.current?.(data.user);
+        } catch (err) {
+          console.error('[Google Sign-In Error]', err.message);
         }
       },
     });
-  }, [onSignIn]);
+  }, []); // no deps — runs once
 
   useEffect(() => {
-    // Load Google Identity Services script
     if (document.querySelector('script[src*="accounts.google.com/gsi/client"]')) {
       initGoogleSignIn();
       return;

@@ -30,6 +30,15 @@ function App() {
   const [currentChannel, setCurrentChannel] = useState(null);
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem('yt_token');
+    if (!token) return;
+    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(user => setUser(user))
+      .catch(() => localStorage.removeItem('yt_token'));
+  }, []);
+
   const fetchVideos = useCallback(() => {
     fetch('/api/videos?shorts=false')
       .then(res => res.json())
@@ -139,7 +148,7 @@ function App() {
           videos={videos}
           channels={channels}
           user={user}
-          onSignIn={setUser}
+          onSignIn={(userData) => { setUser(userData); setActivePage("home"); }}
           onSignInClick={() => setActivePage("signin")}
         />
         <VideoPlayer video={currentVideo} onBack={() => setCurrentVideo(null)} onView={handleVideoView} />
@@ -158,7 +167,7 @@ function App() {
         videos={videos}
         channels={channels}
         user={user}
-        onSignIn={setUser}
+        onSignIn={(userData) => { setUser(userData); setActivePage("home"); }}
         onSignInClick={() => setActivePage("signin")}
       />
       <Sidebar
@@ -171,7 +180,6 @@ function App() {
         <SignInPage
           onSignIn={(userData) => { setUser(userData); setActivePage("home"); }}
           onBack={() => setActivePage("home")}
-          onGoogleSignIn={() => setActivePage("google-signin")}
         />
       )}
       {activePage === "google-signin" && (
